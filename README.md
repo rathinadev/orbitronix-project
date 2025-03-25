@@ -5,7 +5,7 @@
 
 
 
-** In PI **
+**In PI**
 
  1. Install GStreamer (if not installed)
 
