@@ -5,6 +5,8 @@
 
 
 
+'' In pi"
+
  1. Install GStreamer (if not installed)
 
 Run this once on the Raspberry Pi:
