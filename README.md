@@ -5,7 +5,7 @@
 
 
 
-'' In pi''
+"in pi "
 
  1. Install GStreamer (if not installed)
 
