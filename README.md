@@ -28,3 +28,8 @@ At the bottom, add:
 
 @reboot /usr/bin/python3 /home/pi/stream_video.py
 
+**In laptop**
+
+gst-launch-1.0 udpsrc port=5000 caps="application/x-rtp,media=video,encoding-name=H264,payload=96" \
+    ! rtph264depay ! h264parse ! matroskamux \
+    ! tcpserversink host=0.0.0.0 port=8554
