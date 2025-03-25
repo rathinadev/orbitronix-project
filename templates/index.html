@@ -17,7 +17,13 @@
         </div>
         <div class="main-content">
             <h2>Live Video Feed</h2>
-            <div class="video-container" id="video-placeholder">Video Stream Here</div>
+            <div class="video-container">
+                <video id="video-stream" width="640" height="360" autoplay controls>
+                    <source src="http://192.168.1.100:8554" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+            
         </div>
     </div>
     <div class="logs">
