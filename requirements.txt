@@ -1,6 +1,7 @@
 addict==2.4.0
 asttokens==3.0.0
 attrs==25.3.0
+bidict==0.23.1
 blinker==1.9.0
 certifi==2025.1.31
 charset-normalizer==3.4.1
@@ -14,7 +15,9 @@ decorator==5.2.1
 executing==2.2.0
 fastjsonschema==2.21.1
 Flask==3.0.3
+Flask-SocketIO==5.5.1
 fonttools==4.56.0
+h11==0.14.0
 idna==3.10
 importlib_metadata==8.6.1
 ipython==9.0.2
@@ -38,6 +41,7 @@ nest-asyncio==1.6.0
 numpy==2.2.4
 open3d==0.19.0
 packaging==24.2
+paho-mqtt==2.1.0
 pandas==2.2.3
 parso==0.8.4
 pexpect==4.9.0
@@ -51,6 +55,8 @@ Pygments==2.19.1
 pyparsing==3.2.1
 pyquaternion==0.9.9
 python-dateutil==2.9.0.post0
+python-engineio==4.11.2
+python-socketio==5.12.1
 pytz==2025.1
 PyYAML==6.0.2
 referencing==0.36.2
@@ -60,6 +66,7 @@ rpds-py==0.23.1
 scikit-learn==1.6.1
 scipy==1.15.2
 setuptools==76.1.0
+simple-websocket==1.1.0
 six==1.17.0
 stack-data==0.6.3
 stringcase==1.2.0
@@ -72,4 +79,5 @@ urllib3==2.3.0
 wcwidth==0.2.13
 Werkzeug==3.0.6
 widgetsnbextension==4.0.13
+wsproto==1.2.0
 zipp==3.21.0
