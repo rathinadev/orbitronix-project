@@ -1,15 +1,36 @@
-function updateTelemetry(battery, gps, altitude) {
-    document.getElementById("battery").textContent = `Battery: ${battery}%`;
-    document.getElementById("gps").textContent = `GPS: ${gps}`;
-    document.getElementById("altitude").textContent = `Altitude: ${altitude}m`;
+// Connect to Flask-SocketIO server
+var socket = io.connect("http://" + document.domain + ":" + location.port);
+
+// Function to update telemetry data on UI
+function updateTelemetry(sensorData) {
+    document.getElementById("battery").textContent = `Battery: ${sensorData.battery}%`;
+    document.getElementById("gps").textContent = `GPS: ${sensorData.gps}`;
+    document.getElementById("altitude").textContent = `Altitude: ${sensorData.altitude}m`;
+    document.getElementById("temperature").textContent = `Temperature: ${sensorData.temperature}°C`;
+    document.getElementById("gas").textContent = `Gas Level: ${sensorData.gas}`;
+    document.getElementById("distance").textContent = `Distance: ${sensorData.distance}cm`;
 }
 
+// Function to add logs
 function addLog(message) {
     const logContainer = document.getElementById("logs-content");
     const newLog = document.createElement("p");
     newLog.textContent = message;
     logContainer.appendChild(newLog);
 }
+
+// Listen for incoming sensor data from Flask-SocketIO
+socket.on("sensor_update", function(data) {
+    console.log("Received Sensor Data:", data);
+    
+    try {
+        let sensorData = JSON.parse(data);  // Convert JSON string to object
+        updateTelemetry(sensorData);
+        addLog(`New Sensor Update: Battery ${sensorData.battery}%, Altitude ${sensorData.altitude}m, Temp ${sensorData.temperature}°C`);
+    } catch (error) {
+        console.error("Error parsing sensor data:", error);
+    }
+});
 
 // Function to load the video stream from Raspberry Pi
 function loadVideoStream() {
@@ -24,16 +45,6 @@ function loadVideoStream() {
         console.error("Video element not found!");
     }
 }
-
-// Automatically update telemetry every 5 seconds (example)
-setInterval(() => {
-    // Simulating telemetry data updates (Replace with real data fetch)
-    const battery = Math.floor(Math.random() * 100);  // Fake battery percentage
-    const gps = `${(Math.random() * 90).toFixed(4)}, ${(Math.random() * 180).toFixed(4)}`;
-    const altitude = Math.floor(Math.random() * 500); // Fake altitude
-
-    updateTelemetry(battery, gps, altitude);
-}, 5000);
 
 // Load video when the page is ready
 document.addEventListener("DOMContentLoaded", function () {

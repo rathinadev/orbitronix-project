@@ -4,17 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Drone Dashboard</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <div class="navbar">Drone Dashboard</div>
+    
     <div class="container">
         <div class="sidebar">
             <h3>Telemetry Data</h3>
             <p id="battery">Battery: --%</p>
             <p id="gps">GPS: --</p>
             <p id="altitude">Altitude: --m</p>
+            <p id="temperature">Temperature: --°C</p>
+            <p id="gas">Gas Level: --</p>
+            <p id="distance">Distance: --cm</p>
         </div>
+
         <div class="main-content">
             <h2>Live Video Feed</h2>
             <div class="video-container">
@@ -23,13 +29,14 @@
                     Your browser does not support the video tag.
                 </video>
             </div>
-            
         </div>
     </div>
+
     <div class="logs">
         <h3>Logs & Alerts</h3>
-        <p id="logs-content">No alerts yet...</p>
+        <div id="logs-content">No alerts yet...</div>
     </div>
-    <script src="{{ url_for('static', filename='script.js') }}""></script>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 </body>
 </html>
