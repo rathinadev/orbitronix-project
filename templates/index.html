@@ -1,42 +1,66 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Drone Dashboard</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drone Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
 </head>
 <body>
-    <div class="navbar">Drone Dashboard</div>
-    
-    <div class="container">
-        <div class="sidebar">
-            <h3>Telemetry Data</h3>
-            <p id="battery">Battery: --%</p>
-            <p id="gps">GPS: --</p>
-            <p id="altitude">Altitude: --m</p>
-            <p id="temperature">Temperature: --°C</p>
-            <p id="gas">Gas Level: --</p>
-            <p id="distance">Distance: --cm</p>
-        </div>
-
-        <div class="main-content">
-            <h2>Live Video Feed</h2>
-            <div class="video-container">
-                <video id="video-stream" width="640" height="360" autoplay controls>
-                    <source src="http://192.168.1.100:8554" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-            </div>
-        </div>
+  <h1 style="text-align:center; padding: 10px; background: #292940; margin: 0;">Drone Dashboard</h1>
+  <div class="dashboard">
+    <div id="camera" class="box">
+      Live Camera Feed
+      <div class="battery">
+        <p>Battery: 50%</p>
+        <div class="bar"><div class="level"></div></div>
+      </div>
     </div>
-
-    <div class="logs">
-        <h3>Logs & Alerts</h3>
-        <div id="logs-content">No alerts yet...</div>
+    <div id="telemetry" class="box">
+      <h2>Telemetry Data</h2>
+      <div class="telemetry-container">
+        <div class="telemetry-box ir">
+          <div class="telemetry-icon">📡</div>
+          <div class="telemetry-value" id="ir_value">-</div>
+          <div class="telemetry-label">IR Sensor</div>
+        </div>
+        <div class="telemetry-box temp">
+          <div class="telemetry-icon">🌡️</div>
+          <div class="telemetry-value" id="temp_value">-</div>
+          <div class="telemetry-label">Temp (°C)</div>
+        </div>
+        <div class="telemetry-box humidity">
+          <div class="telemetry-icon">💧</div>
+          <div class="telemetry-value" id="humidity_value">-</div>
+          <div class="telemetry-label">Humidity (%)</div>
+        </div>
+        <div class="telemetry-box ultrasonic">
+          <div class="telemetry-icon">📏</div>
+          <div class="telemetry-value" id="ultrasonic_value">-</div>
+          <div class="telemetry-label">Ultrasonic (cm)</div>
+        </div>
+        <div class="telemetry-box mq7">
+          <div class="telemetry-icon">🌀</div>
+          <div class="telemetry-value" id="mq7_value">-</div>
+          <div class="telemetry-label">MQ-7 (ppm)</div>
+        </div>
+        <div class="telemetry-box timestamp">
+          <div class="telemetry-icon">⏰</div>
+          <div class="telemetry-value" id="timestamp">-</div>
+          <div class="telemetry-label">Timestamp</div>
+        </div>
+      </div>
     </div>
-
-    <script src="{{ url_for('static', filename='script.js') }}"></script>
-</body>
+    <div id="map" class="box"></div>
+    <div id="controls" class="box">
+      <h2>Remote Controller</h2>
+      <div class="joystick">
+        <div class="stick"></div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+  <script src="{{ url_for('static', filename='script.js') }}"></script></body>
 </html>
