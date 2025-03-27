@@ -1,33 +1,33 @@
-from flask import Flask, render_template
-from flask_socketio import SocketIO
 import paho.mqtt.client as mqtt
+from pymongo import MongoClient
 import json
 
-app = Flask(__name__,static_folder='static')
-socketio = SocketIO(app, cors_allowed_origins="*")  # Allow frontend connections
+# Connect to MongoDB
+client = MongoClient("mongodb://localhost:27017")
+db = client["drone_data"]
+collection = db["sensor_readings"]
 
-BROKER_IP = "192.168.1.100"  # Laptop/Base Station IP
-TOPIC = "drone/sensors"
+# MQTT Configuration
+MQTT_BROKER = "localhost"  # Change to your broker IP
+MQTT_PORT = 1883
+MQTT_TOPIC = "drone/sensors"
 
-# MQTT Callback - When a message is received
+def on_connect(client, userdata, flags, rc):
+    print(f"Connected to MQTT Broker with result code {rc}")
+    client.subscribe(MQTT_TOPIC)
+
 def on_message(client, userdata, msg):
-    sensor_data = msg.payload.decode()
-    print(f"Forwarding: {sensor_data}")
+    try:
+        payload = json.loads(msg.payload.decode())
+        collection.insert_one(payload)
+        print("Data stored:", payload)
     
-    # Emit data to frontend (WebSockets)
-    socketio.emit("sensor_update", sensor_data)
+    except Exception as e:
+        print("Error processing message:", e)
 
-# Setup MQTT
-mqtt_client = mqtt.Client()
-mqtt_client.on_message = on_message
-mqtt_client.connect(BROKER_IP, 1883, 60)
-mqtt_client.subscribe(TOPIC)
-mqtt_client.loop_start()  # Run MQTT listener in the background
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
 
-@app.route("/")
-def index():
-    return render_template("index.html")
-
-# Start Flask with WebSockets
-if __name__ == "__main__":
-    socketio.run(app, debug=True, host="0.0.0.0")  # Host on local network
+client.connect(MQTT_BROKER, MQTT_PORT, 60)
+client.loop_forever()

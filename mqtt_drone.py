@@ -1,21 +1,40 @@
 import paho.mqtt.client as mqtt
+import json
 import time
-import random  # Simulating sensor data
+import datetime
+import Adafruit_DHT
+import random
 
-BROKER_IP = "192.168.1.100"  # Change to your laptop/base station IP
-TOPIC = "drone/sensors"
+# MQTT Configuration
+MQTT_BROKER = "your_broker_ip"  # Change to your base station IP
+MQTT_PORT = 1883
+MQTT_TOPIC = "drone/sensors"
 
-# Connect to MQTT Broker
 client = mqtt.Client()
-client.connect(BROKER_IP, 1883, 60)
+client.connect(MQTT_BROKER, MQTT_PORT, 60)
 
-while True:
-    sensor_data = {
-        "temperature": round(random.uniform(20, 35), 2),
-        "gas_level": round(random.uniform(0, 100), 2),
-        "altitude": round(random.uniform(100, 500), 2),
+# Simulated sensor read function (Replace with actual GPIO code)
+def read_sensors():
+    ir_sensor_1 = random.randint(0, 1023)  # Replace with actual IR sensor GPIO reading
+    ir_sensor_2 = random.randint(0, 1023)
+    
+    humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, 4)  # GPIO pin 4
+    
+    ultrasonic_distance = round(random.uniform(1.0, 5.0), 2)  # Replace with actual ultrasonic sensor reading
+    
+    return {
+        "ir_sensor_1": ir_sensor_1,
+        "ir_sensor_2": ir_sensor_2,
+        "temperature": temperature,
+        "humidity": humidity,
+        "ultrasonic_distance": ultrasonic_distance,
+        "timestamp": datetime.datetime.utcnow().isoformat()
     }
 
-    client.publish(TOPIC, str(sensor_data))
-    print(f"Published: {sensor_data}")
-    time.sleep(1)  # Send data every second
+while True:
+    sensor_data = read_sensors()
+    
+    client.publish(MQTT_TOPIC, json.dumps(sensor_data))
+    print("Published:", sensor_data)
+    
+    time.sleep(2)  # Adjust sampling rate as needed
