@@ -27,13 +27,14 @@
   /* Main Dashboard Container */
   .dashboard {
     /* 
-      Subtract header height (60px) plus some margin (10px).
+      Subtract header height (60px).
       Adjust to your preference.
     */
     height: calc(100vh - 60px);
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    grid-template-rows: 2fr 1fr;
+    /* 1.5fr vs 1fr → Left side is bigger columns; 1.2fr vs 1fr → top row is a bit bigger */
+    grid-template-columns: 1.5fr 1fr;
+    grid-template-rows: 1.2fr 1fr;
     gap: 15px;
     padding: 10px;
   }
@@ -47,7 +48,7 @@
     overflow: hidden;
   }
   
-  /* Just a placeholder text for camera feed */
+  /* Placeholder text for camera feed */
   .placeholder-text {
     display: block;
     text-align: center;
@@ -99,7 +100,7 @@
   
   /* Telemetry */
   #telemetry {
-    padding: 20px;
+    padding: 15px;
     background: #292940;
     border: 2px solid #555;
     overflow-y: auto;
@@ -113,39 +114,39 @@
   
   .telemetry-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 8px;
   }
   
   .telemetry-box {
     background: #1e1e2f;
     border-radius: 8px;
-    padding: 15px;
+    padding: 10px; /* Reduced from 15px */
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     position: relative;
   }
   .telemetry-box .telemetry-icon {
-    font-size: 24px;
-    margin-bottom: 10px;
+    font-size: 18px; /* Reduced from 24px */
+    margin-bottom: 6px;
   }
   .telemetry-box .telemetry-value {
-    font-size: 22px;
+    font-size: 18px; /* Reduced from 22px */
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 4px;
   }
   .telemetry-box .telemetry-label {
-    font-size: 14px;
+    font-size: 12px; /* Reduced from 14px */
     color: #aaa;
   }
   
   /* Unique styles per metric */
-  .telemetry-box.ir { border-top: 4px solid #ffcc00; }
-  .telemetry-box.temp { border-top: 4px solid #ff7043; }
-  .telemetry-box.humidity { border-top: 4px solid #42a5f5; }
-  .telemetry-box.ultrasonic { border-top: 4px solid #66bb6a; }
-  .telemetry-box.mq7 { border-top: 4px solid #ab47bc; }
-  .telemetry-box.timestamp { border-top: 4px solid #90a4ae; }
+  .telemetry-box.ir { border-top: 3px solid #ffcc00; }
+  .telemetry-box.temp { border-top: 3px solid #ff7043; }
+  .telemetry-box.humidity { border-top: 3px solid #42a5f5; }
+  .telemetry-box.ultrasonic { border-top: 3px solid #66bb6a; }
+  .telemetry-box.mq7 { border-top: 3px solid #ab47bc; }
+  .telemetry-box.timestamp { border-top: 3px solid #90a4ae; }
   
   /* Remote Controller */
   #controls {
@@ -156,6 +157,10 @@
     border: 2px solid #ff5722;
     border-radius: 10px;
     padding: 20px;
+  }
+  
+  #controls h2 {
+    margin-bottom: 10px;
   }
   
   .joystick {
