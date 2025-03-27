@@ -10,5 +10,6 @@ socket.onmessage = function(event) {
   document.getElementById("timestamp").innerText = data.timestamp;
 };
 
-var map = L.map('map').setView([13.0827, 80.2707], 13); // Default to Chennai
+// Initialize Leaflet map
+var map = L.map('map').setView([13.0827, 80.2707], 13);
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);

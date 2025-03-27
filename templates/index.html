@@ -1,22 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Drone Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
+  />
 </head>
 <body>
-  <h1 style="text-align:center; padding: 10px; background: #292940; margin: 0;">Drone Dashboard</h1>
+  <!-- Header -->
+  <header class="header-bar">
+    <h1>Drone Dashboard</h1>
+  </header>
+
   <div class="dashboard">
     <div id="camera" class="box">
-      Live Camera Feed
+      <span class="placeholder-text">Live Camera Feed</span>
       <div class="battery">
         <p>Battery: 50%</p>
-        <div class="bar"><div class="level"></div></div>
+        <div class="bar">
+          <div class="level"></div>
+        </div>
       </div>
     </div>
+
     <div id="telemetry" class="box">
       <h2>Telemetry Data</h2>
       <div class="telemetry-container">
@@ -52,7 +61,9 @@
         </div>
       </div>
     </div>
+
     <div id="map" class="box"></div>
+
     <div id="controls" class="box">
       <h2>Remote Controller</h2>
       <div class="joystick">
@@ -60,7 +71,7 @@
       </div>
     </div>
   </div>
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
   <script src="{{ url_for('static', filename='script.js') }}"></script></body>
 </html>
