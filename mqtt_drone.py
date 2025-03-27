@@ -17,12 +17,14 @@ client.connect(MQTT_BROKER, MQTT_PORT, 60)
 def read_sensors():
     ir_sensor_1 = random.randint(0, 1023)  # Replace with actual IR sensor GPIO reading
     ir_sensor_2 = random.randint(0, 1023)
+    co2_ppm= random.randint(0, 1023)
     
     humidity, temperature = Adafruit_DHT.read_retry(Adafruit_DHT.DHT11, 4)  # GPIO pin 4
     
     ultrasonic_distance = round(random.uniform(1.0, 5.0), 2)  # Replace with actual ultrasonic sensor reading
     
     return {
+        "co2_ppm": co2_ppm,
         "ir_sensor_1": ir_sensor_1,
         "ir_sensor_2": ir_sensor_2,
         "temperature": temperature,
