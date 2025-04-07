@@ -1,81 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Drone Dashboard</title>
-  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.css"
-  />
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Drone Control Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
-  <!-- Header -->
-  <header class="header-bar">
-    <h1>Drone Dashboard</h1>
-  </header>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="main-header">
+            <div class="logo">DRONE CTRL</div>
+            <div class="status-indicators">
+                 <!-- Battery Status -->
+                <div class="battery-status">
+                    <span class="battery-icon">🔋</span> <!-- Placeholder icon -->
+                    <div class="battery-bar">
+                        <div class="battery-level" id="batteryLevelDisplay" style="width: 50%;"></div>
+                    </div>
+                    <span id="batteryPercent">50%</span>
+                </div>
+                 <!-- Timestamp -->
+                 <div class="timestamp-header" id="headerTimestamp">--:--:--</div>
+            </div>
+        </header>
 
-  <div class="dashboard">
-    <!-- Top-left: Camera Feed -->
-    <div id="camera" class="box">
-      <span class="placeholder-text">Live Camera Feed</span>
-      <div class="battery">
-        <p>Battery: 50%</p>
-        <div class="bar">
-          <div class="level"></div>
-        </div>
-      </div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Video Panel (Larger Area) -->
+            <section class="panel video-panel">
+                 <h2 class="panel-title">Live Feed</h2>
+                 <div class="video-wrapper">
+                     <video id="videoStream" controls autoplay muted playsinline></video>
+                 </div>
+            </section>
+
+            <!-- Right Sidebar (Telemetry & Controls) -->
+            <aside class="right-sidebar">
+                <!-- Telemetry Panel -->
+                <section class="panel telemetry-panel">
+                    <h2 class="panel-title">Telemetry</h2>
+                    <ul class="telemetry-list">
+                        <li>
+                            <span class="label">IR Sensor</span>
+                            <span class="value" id="ir_value">-</span>
+                            <span class="unit"></span>
+                        </li>
+                        <li>
+                            <span class="label">Temperature</span>
+                            <span class="value" id="temp_value">-</span>
+                            <span class="unit">°C</span>
+                        </li>
+                        <li>
+                            <span class="label">Humidity</span>
+                            <span class="value" id="humidity_value">-</span>
+                            <span class="unit">%</span>
+                        </li>
+                        <li>
+                            <span class="label">Altitude</span>
+                            <span class="value" id="ultrasonic_value">-</span>
+                            <span class="unit">cm</span>
+                        </li>
+                        <li>
+                            <span class="label">CO Level</span>
+                            <span class="value" id="mq7_value">-</span>
+                            <span class="unit">ppm</span>
+                        </li>
+                    </ul>
+                </section>
+
+                <!-- Mode Panel -->
+                 <section class="panel mode-panel">
+                    <h2 class="panel-title">Flight Mode</h2>
+                     <div class="toggle-switch">
+                        <input type="radio" id="manualMode" name="flightMode" value="manual" checked>
+                        <label for="manualMode">Manual</label>
+                        <input type="radio" id="autoMode" name="flightMode" value="autonomous">
+                        <label for="autoMode">Auto</label>
+                        <span class="toggle-indicator"></span>
+                    </div>
+                    <p class="mode-status">Current: <strong id="currentMode">Manual</strong></p>
+                </section>
+
+                <!-- Controller Panel with Dual Joysticks -->
+                <section class="panel controller-panel">
+                    <h2 class="panel-title">Virtual Controls</h2>
+                    <div class="dual-joystick-area">
+                        <!-- Left Joystick (Throttle/Yaw) -->
+                        <div class="joystick-container">
+                            <div class="joystick-base" id="left_joystick_base">
+                                <div class="joystick-stick" id="left_joystick_stick"></div>
+                            </div>
+                            <span class="joystick-label">Throttle / Yaw</span>
+                        </div>
+                        <!-- Right Joystick (Pitch/Roll) -->
+                        <div class="joystick-container">
+                            <div class="joystick-base" id="right_joystick_base">
+                                <div class="joystick-stick" id="right_joystick_stick"></div>
+                            </div>
+                            <span class="joystick-label">Pitch / Roll</span>
+                        </div>
+                    </div>
+                </section>
+            </aside>
+        </main>
     </div>
 
-    <!-- Top-right: Telemetry -->
-    <div id="telemetry" class="box">
-      <h2>Telemetry Data</h2>
-      <div class="telemetry-container">
-        <div class="telemetry-box ir">
-          <div class="telemetry-icon">📡</div>
-          <div class="telemetry-value" id="ir_value">-</div>
-          <div class="telemetry-label">IR Sensor</div>
-        </div>
-        <div class="telemetry-box temp">
-          <div class="telemetry-icon">🌡️</div>
-          <div class="telemetry-value" id="temp_value">-</div>
-          <div class="telemetry-label">Temp (°C)</div>
-        </div>
-        <div class="telemetry-box humidity">
-          <div class="telemetry-icon">💧</div>
-          <div class="telemetry-value" id="humidity_value">-</div>
-          <div class="telemetry-label">Humidity (%)</div>
-        </div>
-        <div class="telemetry-box ultrasonic">
-          <div class="telemetry-icon">📏</div>
-          <div class="telemetry-value" id="ultrasonic_value">-</div>
-          <div class="telemetry-label">Ultrasonic (cm)</div>
-        </div>
-        <div class="telemetry-box mq7">
-          <div class="telemetry-icon">🌀</div>
-          <div class="telemetry-value" id="mq7_value">-</div>
-          <div class="telemetry-label">MQ-7 (ppm)</div>
-        </div>
-        <div class="telemetry-box timestamp">
-          <div class="telemetry-icon">⏰</div>
-          <div class="telemetry-value" id="timestamp">-</div>
-          <div class="telemetry-label">Timestamp</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Bottom-left: Map -->
-    <div id="map" class="box"></div>
-
-    <!-- Bottom-right: Remote Controller -->
-    <div id="controls" class="box">
-      <h2>Remote Controller</h2>
-      <div class="joystick">
-        <div class="stick"></div>
-      </div>
-    </div>
-  </div>
-
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
-  <script src="{{ url_for('static', filename='script.js') }}"></script></body>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
 </html>

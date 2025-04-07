@@ -1,183 +1,420 @@
 /* Reset & Global */
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg-darkest: #10141a;    /* Deep dark background */
+  --bg-dark: #1a1f28;      /* Primary panel background */
+  --bg-medium: #2a303c;    /* Secondary elements, hover */
+  --bg-light: #3c4250;     /* Borders, subtle lines */
+  --text-primary: #e8e8e8; /* Main text */
+  --text-secondary: #a0a8b4;/* Labels, secondary text */
+  --accent-primary: #ff6b6b; /* Vibrant accent (e.g., red/pink) */
+  --accent-secondary: #4ecdc4;/* Secondary accent (e.g., teal) */
+  --accent-tertiary: #ffe66d;/* Tertiary accent (e.g., yellow for battery) */
+  --font-family: 'Poppins', sans-serif;
+  --border-radius: 8px;
+  --panel-padding: 15px 20px;
+  --shadow-color: rgba(0, 0, 0, 0.2);
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  font-family: var(--font-family);
+  background-color: var(--bg-darkest);
+  color: var(--text-primary);
+  overflow: hidden;
+  font-size: 14px; /* Base font size */
+}
+
+.dashboard-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* Header */
+.main-header {
+  background-color: var(--bg-dark);
+  padding: 10px 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--bg-light);
+  flex-shrink: 0; /* Prevent header from shrinking */
+}
+
+.logo {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--accent-secondary);
+  letter-spacing: 1px;
+}
+
+.status-indicators {
+  display: flex;
+  align-items: center;
+  gap: 25px;
+}
+
+/* Battery Status in Header */
+.battery-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+.battery-icon {
+  font-size: 1.1rem; /* Adjust if using icon font */
+  color: var(--accent-tertiary);
+}
+.battery-bar {
+  width: 70px;
+  height: 8px;
+  background-color: var(--bg-medium);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid var(--bg-light);
+}
+.battery-level {
+  height: 100%;
+  background: var(--accent-tertiary);
+  border-radius: 3px;
+  transition: width 0.5s ease-in-out;
+}
+#batteryPercent {
+  color: var(--text-primary);
+  font-weight: 500;
+  min-width: 35px; /* Prevent layout shift */
+  text-align: right;
+}
+
+.timestamp-header {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--text-primary);
+  background-color: var(--bg-medium);
+  padding: 4px 10px;
+  border-radius: 5px;
+}
+
+
+/* Main Content Layout */
+.main-content {
+  flex-grow: 1; /* Take remaining height */
+  display: flex;
+  padding: 20px;
+  gap: 20px;
+  overflow: hidden; /* Prevent scrollbars here */
+}
+
+/* Panels */
+.panel {
+  background-color: var(--bg-dark);
+  border-radius: var(--border-radius);
+  box-shadow: 0 4px 12px var(--shadow-color);
+  border: 1px solid var(--bg-light);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Important for internal scrolling/layout */
+}
+
+.panel-title {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  padding: 10px var(--panel-padding);
+  border-bottom: 1px solid var(--bg-light);
+  margin: 0;
+  background-color: rgba(0,0,0,0.1); /* Subtle header background */
+  flex-shrink: 0; /* Prevent title shrinking */
+}
+
+/* Video Panel */
+.video-panel {
+  flex-grow: 1; /* Take available horizontal space */
+  min-width: 0; /* Allow shrinking */
+}
+
+.video-wrapper {
+  flex-grow: 1;
+  background-color: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 10px; /* Padding around the video element */
+  border-radius: 0 0 var(--border-radius) var(--border-radius); /* Match panel bottom radius */
+}
+
+#videoStream {
+  display: block;
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 4px; /* Slight radius for the video player itself */
+}
+
+
+/* Right Sidebar */
+.right-sidebar {
+  display: flex;
+  flex-direction: column;
+  width: 300px; /* Fixed width sidebar */
+  flex-shrink: 0; /* Prevent shrinking */
+  gap: 20px; /* Space between panels in the sidebar */
+  overflow-y: auto; /* Allow sidebar scroll if content overflows */
+  padding-bottom: 5px; /* Space at bottom */
+}
+/* Hide scrollbar visually but allow scrolling */
+.right-sidebar::-webkit-scrollbar { width: 5px; }
+.right-sidebar::-webkit-scrollbar-track { background: transparent; }
+.right-sidebar::-webkit-scrollbar-thumb { background-color: var(--bg-light); border-radius: 10px; border: 1px solid var(--bg-dark); }
+
+
+/* Telemetry Panel */
+.telemetry-panel {
+  /* Let content determine height, but can set a min/max if needed */
+  flex-shrink: 0; /* Prevent shrinking unless necessary */
+}
+
+.telemetry-list {
+  list-style: none;
+  padding: var(--panel-padding);
+  padding-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Space between items */
+}
+
+.telemetry-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--bg-light);
+}
+.telemetry-list li:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.telemetry-list .label {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  flex-basis: 40%; /* Allocate space for label */
+  text-align: left;
+}
+
+.telemetry-list .value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  flex-basis: 40%; /* Allocate space for value */
+  text-align: right;
+}
+
+.telemetry-list .unit {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  flex-basis: 15%; /* Allocate space for unit */
+  text-align: right;
+  padding-left: 5px;
+}
+
+
+/* Mode Panel */
+.mode-panel {
+  padding: var(--panel-padding);
+  display: flex; /* Override panel default */
+  flex-direction: column;
+  align-items: center; /* Center toggle switch */
+  gap: 15px;
+  padding-top: 10px; /* Reduce top padding */
+  flex-shrink: 0;
+}
+
+.toggle-switch {
+  display: inline-flex;
+  background-color: var(--bg-medium);
+  border-radius: 25px;
+  padding: 4px;
+  position: relative;
+  border: 1px solid var(--bg-light);
+}
+.toggle-switch input[type="radio"] { display: none; }
+.toggle-switch label {
+  padding: 6px 20px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  z-index: 2;
+  transition: color 0.3s ease;
+  border-radius: 20px;
+}
+.toggle-indicator {
+  position: absolute;
+  top: 4px; bottom: 4px; left: 4px;
+  width: calc(50% - 4px);
+  background: var(--accent-secondary); /* Teal accent */
+  border-radius: 20px;
+  z-index: 1;
+  transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+}
+#manualMode:checked ~ .toggle-indicator { transform: translateX(0%); }
+#manualMode:checked ~ label[for="manualMode"] { color: var(--text-primary); }
+#autoMode:checked ~ .toggle-indicator { transform: translateX(calc(100% - 0px)); }
+#autoMode:checked ~ label[for="autoMode"] { color: var(--text-primary); }
+
+.mode-status {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+#currentMode {
+  color: var(--accent-secondary);
+  font-weight: 700;
+}
+
+
+/* Controller Panel with Dual Joysticks */
+.controller-panel {
+  flex-grow: 1; /* Allow it to take space */
+  min-height: 220px; /* Ensure enough height for two joysticks */
+  display: flex; /* Use flex */
+  flex-direction: column; /* Stack title and joystick area */
+  padding-bottom: 10px; /* Add some bottom padding */
+}
+
+.dual-joystick-area {
+  flex-grow: 1; /* Take remaining space in the panel */
+  display: flex;
+  justify-content: space-around; /* Space out the joysticks */
+  align-items: center; /* Vertically center */
+  padding: 15px 10px; /* Padding around the joysticks */
+  gap: 15px; /* Space between if they wrap */
+}
+
+.joystick-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px; /* Space between base and label */
+}
+
+.joystick-base {
+  width: 110px; /* Size of the joystick base */
+  height: 110px;
+  background: radial-gradient(circle at 30% 30%, var(--bg-light), var(--bg-medium) 80%);
+  border-radius: 50%;
+  position: relative; /* For positioning the stick */
+  border: 2px solid var(--bg-darkest);
+  box-shadow: inset 0 3px 8px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.2);
+  user-select: none; /* Prevent text selection during drag */
+}
+.joystick-base::before { /* Optional subtle inner ring */
+  content: '';
+  position: absolute;
+  top: 8px; left: 8px; right: 8px; bottom: 8px;
+  border: 1px solid rgba(0,0,0,0.2);
+  border-radius: 50%;
+  box-shadow: inset 0 0 5px rgba(255,255,255,0.05);
+}
+
+
+.joystick-stick {
+  width: 55px; /* Size of the stick */
+  height: 55px;
+  background: radial-gradient(circle at 70% 30%, lighten(var(--accent-primary), 10%), var(--accent-primary) 90%);
+  border-radius: 50%;
+  position: absolute;
+  /* Centered using transform */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4), inset 0 -2px 4px rgba(0,0,0,0.3);
+  border: 1px solid rgba(255,255,255,0.1);
+  cursor: grab; /* Indicate interactivity */
+  /* Transition applied only for reset in JS */
+  /* transition: transform 0.1s linear, left 0.1s linear, top 0.1s linear; */
+  user-select: none; /* Prevent text selection during drag */
+}
+
+.joystick-stick:active {
+  cursor: grabbing;
+  /* Scale effect applied during drag via JS if desired, but base style is fine */
+  /* transform: translate(-50%, -50%) scale(0.95); */
+  background: radial-gradient(circle at 70% 30%, lighten(var(--accent-primary), 15%), var(--accent-primary) 90%);
+}
+
+.joystick-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+  text-align: center;
+}
+
+
+/* Responsive Adjustments */
+@media (max-width: 992px) {
+  .main-content {
+      flex-direction: column; /* Stack video and sidebar */
+      overflow-y: auto; /* Allow main area scrolling */
   }
-  
-  html, body {
-    width: 100%;
-    height: 100%;
-    font-family: Arial, sans-serif;
-    background-color: #121212;
-    color: white;
+  .right-sidebar {
+      width: 100%; /* Full width on smaller screens */
+      flex-direction: row; /* Arrange sidebar items horizontally */
+      flex-wrap: wrap; /* Allow wrapping */
+      overflow-y: visible; /* Disable sidebar scroll */
+      height: auto;
   }
-  
-  /* Header bar */
-  .header-bar {
-    background: #292940;
-    padding: 10px 0;
-    text-align: center;
+   .right-sidebar > .panel {
+      width: calc(50% - 10px); /* Two panels per row approx */
+      min-width: 250px; /* Minimum width */
+      flex-grow: 1; /* Allow panels to grow */
   }
-  .header-bar h1 {
-    margin: 0;
-    font-size: 24px;
+  .controller-panel { /* Target specific panel if needed */
+       min-height: 200px; /* Adjust min height if needed */
   }
-  
-  /* Main Dashboard Container */
-  .dashboard {
-    /* 
-      Subtract header height (60px).
-      Adjust to your preference.
-    */
-    height: calc(100vh - 60px);
-    display: grid;
-    /* 1.5fr vs 1fr → Left side is bigger columns; 1.2fr vs 1fr → top row is a bit bigger */
-    grid-template-columns: 1.5fr 1fr;
-    grid-template-rows: 1.2fr 1fr;
-    gap: 15px;
-    padding: 10px;
+  .dual-joystick-area {
+      padding: 10px;
   }
-  
-  /* Reusable box styling */
-  .box {
-    border-radius: 12px;
-    background: #1e1e2f;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-    position: relative;
-    overflow: hidden;
+  .joystick-base { width: 100px; height: 100px; }
+  .joystick-stick { width: 50px; height: 50px; }
+  .telemetry-list .value { font-size: 1.2rem; }
+}
+
+@media (max-width: 600px) {
+   .logo { font-size: 1.2rem;}
+   .status-indicators { gap: 15px; }
+   .battery-bar { width: 50px;}
+   .timestamp-header { font-size: 0.85rem; }
+   .main-content { padding: 10px; gap: 10px;}
+   .right-sidebar { gap: 10px; }
+   .right-sidebar > .panel {
+      width: 100%; /* Stack panels fully */
+      min-width: unset;
   }
-  
-  /* Placeholder text for camera feed */
-  .placeholder-text {
-    display: block;
-    text-align: center;
-    margin-top: 30px;
-    color: #bbb;
-    font-size: 20px;
+  .controller-panel {
+      min-height: 180px;
   }
-  
-  /* Battery overlay */
-  .battery {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: #333;
-    padding: 5px 10px;
-    border-radius: 5px;
-    font-size: 14px;
+   .dual-joystick-area {
+      /* Could potentially stack them vertically if really narrow */
+      /* flex-direction: column; */
+      /* gap: 20px; */
+      padding: 15px 5px;
   }
-  .battery .bar {
-    width: 80px;
-    height: 10px;
-    background: #555;
-    border-radius: 5px;
-    margin-top: 5px;
-    position: relative;
-  }
-  .battery .bar .level {
-    height: 100%;
-    background: #0f0;
-    width: 50%; /* Placeholder value */
-    border-radius: 5px;
-  }
-  
-  /* Camera area */
-  #camera {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border: 3px solid #ffcc00;
-  }
-  
-  /* Map styling */
-  #map {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
-    border: 2px solid #444;
-  }
-  
-  /* Telemetry */
-  #telemetry {
-    padding: 15px;
-    background: #292940;
-    border: 2px solid #555;
-    overflow-y: auto;
-  }
-  
-  #telemetry h2 {
-    text-align: center;
-    color: #ffcc00;
-    margin-bottom: 10px;
-  }
-  
-  .telemetry-container {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-    gap: 8px;
-  }
-  
-  .telemetry-box {
-    background: #1e1e2f;
-    border-radius: 8px;
-    padding: 10px; /* Reduced from 15px */
-    text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-    position: relative;
-  }
-  .telemetry-box .telemetry-icon {
-    font-size: 18px; /* Reduced from 24px */
-    margin-bottom: 6px;
-  }
-  .telemetry-box .telemetry-value {
-    font-size: 18px; /* Reduced from 22px */
-    font-weight: bold;
-    margin-bottom: 4px;
-  }
-  .telemetry-box .telemetry-label {
-    font-size: 12px; /* Reduced from 14px */
-    color: #aaa;
-  }
-  
-  /* Unique styles per metric */
-  .telemetry-box.ir { border-top: 3px solid #ffcc00; }
-  .telemetry-box.temp { border-top: 3px solid #ff7043; }
-  .telemetry-box.humidity { border-top: 3px solid #42a5f5; }
-  .telemetry-box.ultrasonic { border-top: 3px solid #66bb6a; }
-  .telemetry-box.mq7 { border-top: 3px solid #ab47bc; }
-  .telemetry-box.timestamp { border-top: 3px solid #90a4ae; }
-  
-  /* Remote Controller */
-  #controls {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    border: 2px solid #ff5722;
-    border-radius: 10px;
-    padding: 20px;
-  }
-  
-  #controls h2 {
-    margin-bottom: 10px;
-  }
-  
-  .joystick {
-    width: 100px;
-    height: 100px;
-    background: #444;
-    border-radius: 50%;
-    position: relative;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .joystick .stick {
-    width: 40px;
-    height: 40px;
-    background: #ff5722;
-    border-radius: 50%;
-    position: absolute;
-  }
-  
+  .joystick-base { width: 90px; height: 90px; }
+  .joystick-stick { width: 45px; height: 45px; }
+  .joystick-label { font-size: 0.7rem; }
+  .telemetry-list .label { flex-basis: 35%; }
+  .telemetry-list .value { font-size: 1.1rem; flex-basis: 45%;}
+  .telemetry-list .unit { flex-basis: 10%; font-size: 0.75rem;}
+}
